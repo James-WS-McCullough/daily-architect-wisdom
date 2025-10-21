@@ -652,7 +652,7 @@ onUnmounted(() => {
 }
 
 .share-button {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #f59e0b, #f97316);
   border: none;
   color: white;
   padding: 0.5rem 1rem;
@@ -662,13 +662,13 @@ onUnmounted(() => {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
 }
 
 .share-button:hover {
-  background: linear-gradient(135deg, #7c3aed, #db2777);
+  background: linear-gradient(135deg, #d97706, #ea580c);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
 }
 
 .dev-selector {
@@ -850,14 +850,14 @@ onUnmounted(() => {
   padding: 3rem 2rem;
   max-width: 500px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
-  border-color: rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(249, 115, 22, 0.05));
+  border-color: rgba(245, 158, 11, 0.2);
 }
 
 .weekend-title {
   font-size: 2.5rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #f59e0b, #f97316);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1054,14 +1054,14 @@ onUnmounted(() => {
 }
 
 .article-content :deep(a:visited) {
-  color: #a78bfa;
-  border-bottom-color: rgba(167, 139, 250, 0.3);
+  color: #fbbf24;
+  border-bottom-color: rgba(251, 191, 36, 0.3);
 }
 
 .article-content :deep(a:visited:hover) {
-  color: #c4b5fd;
-  border-bottom-color: rgba(196, 181, 253, 0.6);
-  background: rgba(167, 139, 250, 0.1);
+  color: #fcd34d;
+  border-bottom-color: rgba(252, 211, 77, 0.6);
+  background: rgba(251, 191, 36, 0.1);
 }
 
 /* Table styles */
