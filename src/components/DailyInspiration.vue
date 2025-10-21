@@ -7,7 +7,7 @@
     
     <header class="header" :class="{ 'header-minimized': isScrolled }">
       <div class="container">
-        <h1 class="title">📚 Daily Developer Wisdom</h1>
+        <h1 class="title">🏛️ Daily Architect Wisdom</h1>
         <div class="date-info" v-show="!isScrolled || !isMobile">
           <span class="current-date">{{ formatDate(currentDate) }}</span>
           <span class="day-counter" v-if="isDeveloperMode">Day {{ currentDayNumber }} of {{ totalArticles }}</span>
@@ -83,11 +83,11 @@
               <div class="countdown-label">{{ daysUntilStart === 1 ? 'day' : 'days' }} to go!</div>
             </div>
             <p class="no-articles-message">
-              Daily Developer Wisdom starts on 
+              Daily Architect Wisdom starts on
               <strong>{{ formatDate(new Date(START_DATE)) }}</strong>
             </p>
             <p class="no-articles-subtitle">
-              Check back then for your first dose of programming wisdom!
+              Check back then for your first dose of architecture wisdom!
             </p>
           </div>
         </div>
@@ -124,13 +124,13 @@
       <div class="container">
         <div class="footer-content">
           <p class="attribution">
-            📖 Articles sourced from 
-            <strong>"97 Things Every Programmer Should Know"</strong>
+            📖 Articles sourced from
+            <strong>"97 Things Every Software Architect Should Know"</strong>
           </p>
           <p class="purchase-link">
-            <a 
-              href="https://www.oreilly.com/library/view/97-things-every/9780596809515/" 
-              target="_blank" 
+            <a
+              href="https://www.oreilly.com/library/view/97-things-every/9780596800611/"
+              target="_blank"
               rel="noopener noreferrer"
               class="book-link"
             >
@@ -152,7 +152,7 @@ import { marked } from 'marked'
 import articlesData from '../data/articles.json'
 
 // Configuration
-const START_DATE = new Date('2025-09-01') // Articles start date //2025-09-01
+const START_DATE = new Date('2025-10-20') // Articles start date
 const isDeveloperMode = import.meta.env.DEV // Enable developer features in development
 
 const articles = articlesData.inspiration
@@ -453,9 +453,9 @@ const shareArticle = async () => {
   
   let shareMessage
   if (isToday) {
-    shareMessage = `Today's Daily Developer Wisdom: ${currentArticle.value.title} - ${pageUrl}`
+    shareMessage = `Today's Daily Architect Wisdom: ${currentArticle.value.title} - ${pageUrl}`
   } else {
-    shareMessage = `Daily Developer Wisdom - ${pageUrl}`
+    shareMessage = `Daily Architect Wisdom - ${pageUrl}`
   }
   
   try {
