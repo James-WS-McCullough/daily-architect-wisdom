@@ -1,19 +1,19 @@
-# Daily Developer Wisdom
+# Daily Architect Wisdom
 
-A simple, elegant web application that delivers daily programming wisdom to inspire and educate developers. Each weekday, discover a new piece of expert advice to enhance your coding journey.
+A simple, elegant web application that delivers daily software architecture wisdom to inspire and educate architects. Each weekday, discover a new piece of expert advice to enhance your architectural journey.
 
 ## 🎯 About
 
 This site was made as a test of the Github Agent Claude Sonnet 4.
 Bad coding practices beware!
 
-This site provides curated daily programming insights sourced from **"97 Things Every Programmer Should Know"** - a collection of wisdom from experienced software developers and industry experts. Each article offers practical advice, best practices, and thoughtful perspectives on software development.
+This site provides curated daily architecture insights sourced from **"97 Things Every Software Architect Should Know"** - a collection of wisdom from experienced software architects and industry experts. Each article offers practical advice, best practices, and thoughtful perspectives on software architecture and design.
 
-**Credit**: All articles are sourced from *"97 Things Every Programmer Should Know"* and full credit goes to the original authors and contributors of that excellent resource.
+**Credit**: All articles are sourced from *"97 Things Every Software Architect Should Know"* and full credit goes to the original authors and contributors of that excellent resource.
 
 ## ✨ Features
 
-- **📅 Daily Articles**: New programming wisdom delivered every weekday (Monday-Friday)
+- **📅 Daily Articles**: New architecture wisdom delivered every weekday (Monday-Friday)
 - **🌙 Dark Mode**: Beautiful, easy-on-the-eyes reading experience
 - **📱 Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **⚡ Fast & Lightweight**: Built with Vue.js and Vite for optimal performance
@@ -23,7 +23,7 @@ This site provides curated daily programming insights sourced from **"97 Things 
 
 ## 🚀 Live Demo
 
-Visit the live application: [Daily Developer Wisdom](https://james-ws-mccullough.github.io/daily-developer-wisdom-webapp/)
+Visit the live application: [Daily Architect Wisdom](https://james-ws-mccullough.github.io/daily-architect-wisdom/)
 
 ## 🛠 Technology Stack
 
@@ -43,8 +43,8 @@ Visit the live application: [Daily Developer Wisdom](https://james-ws-mccullough
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/James-WS-McCullough/daily-developer-wisdom-webapp.git
-   cd daily-developer-wisdom-webapp
+   git clone https://github.com/James-WS-McCullough/daily-architect-wisdom.git
+   cd daily-architect-wisdom
    ```
 
 2. **Install dependencies**
@@ -109,8 +109,8 @@ npm run build && npm run deploy
 
 ## 📚 Content Attribution
 
-All articles are sourced from **"97 Things Every Programmer Should Know"**, a collaborative book featuring insights from experienced programmers and software development experts. We gratefully acknowledge and credit the original authors and contributors for their valuable wisdom.
+All articles are sourced from **"97 Things Every Software Architect Should Know"**, a collaborative book featuring insights from experienced software architects and industry experts. We gratefully acknowledge and credit the original authors and contributors for their valuable wisdom.
 
 ---
 
-*Daily wisdom for the developer's journey* ✨
+*Daily wisdom for the architect's journey* 🏛️

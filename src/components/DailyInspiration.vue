@@ -614,7 +614,7 @@ onUnmounted(() => {
 .title {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #60a5fa, #34d399);
+  background: linear-gradient(135deg, #10b981, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -699,8 +699,8 @@ onUnmounted(() => {
 .article-selector:focus {
   outline: none;
   background: rgba(255, 255, 255, 0.2);
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
 }
 
 .article-selector option {
@@ -735,14 +735,14 @@ onUnmounted(() => {
 }
 
 .nav-button.today {
-  background: linear-gradient(135deg, #60a5fa, #34d399);
+  background: linear-gradient(135deg, #10b981, #34d399);
   border: none;
   color: #000;
   font-weight: 600;
 }
 
 .nav-button.today:hover {
-  background: linear-gradient(135deg, #3b82f6, #10b981);
+  background: linear-gradient(135deg, #059669, #10b981);
   transform: translateY(-2px);
 }
 
@@ -783,7 +783,7 @@ onUnmounted(() => {
 .no-articles-title {
   font-size: 2.5rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #60a5fa, #34d399);
+  background: linear-gradient(135deg, #10b981, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -809,8 +809,8 @@ onUnmounted(() => {
   align-items: center;
   margin: 2rem 0;
   padding: 1.5rem;
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(52, 211, 153, 0.1));
-  border: 1px solid rgba(96, 165, 250, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+  border: 1px solid rgba(16, 185, 129, 0.3);
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
@@ -818,7 +818,7 @@ onUnmounted(() => {
 .countdown-number {
   font-size: 4rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #60a5fa, #34d399);
+  background: linear-gradient(135deg, #10b981, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -896,7 +896,7 @@ onUnmounted(() => {
 }
 
 .attribution strong {
-  color: #60a5fa;
+  color: #10b981;
   font-weight: 600;
 }
 
@@ -906,7 +906,7 @@ onUnmounted(() => {
 
 .book-link {
   display: inline-block;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: white;
   text-decoration: none;
   padding: 0.75rem 1.5rem;
@@ -918,7 +918,7 @@ onUnmounted(() => {
 }
 
 .book-link:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
 }
@@ -1023,7 +1023,7 @@ onUnmounted(() => {
 }
 
 .article-content :deep(sup) {
-  color: #60a5fa;
+  color: #10b981;
   font-size: 0.75em;
   vertical-align: super;
   line-height: 0;
@@ -1037,17 +1037,17 @@ onUnmounted(() => {
 }
 
 .article-content :deep(a) {
-  color: #60a5fa;
+  color: #10b981;
   text-decoration: none;
-  border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.3);
   transition: all 0.2s ease;
   font-weight: 500;
 }
 
 .article-content :deep(a:hover) {
-  color: #93c5fd;
-  border-bottom-color: rgba(147, 197, 253, 0.6);
-  background: rgba(96, 165, 250, 0.1);
+  color: #34d399;
+  border-bottom-color: rgba(52, 211, 153, 0.6);
+  background: rgba(16, 185, 129, 0.1);
   padding: 0.125rem 0.25rem;
   margin: -0.125rem -0.25rem;
   border-radius: 0.25rem;
@@ -1077,8 +1077,8 @@ onUnmounted(() => {
 }
 
 .article-content :deep(thead) {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(52, 211, 153, 0.1));
-  border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+  border-bottom: 2px solid rgba(16, 185, 129, 0.3);
 }
 
 .article-content :deep(th) {
@@ -1166,7 +1166,7 @@ onUnmounted(() => {
 }
 
 .article-content :deep(blockquote) {
-  border-left: 3px solid #60a5fa;
+  border-left: 3px solid #10b981;
   padding-left: 1.5rem;
   margin: 2rem 0;
   font-style: italic;
