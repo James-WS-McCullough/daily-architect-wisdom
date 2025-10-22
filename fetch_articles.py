@@ -20,10 +20,26 @@ class ArticleParser(HTMLParser):
         self.content_parts = []
         self.in_h1 = False
         self.in_h2 = False
+        self.in_h3 = False
+        self.in_h4 = False
+        self.in_h5 = False
+        self.in_h6 = False
         self.in_p = False
         self.in_article = False
         self.in_footer = False
         self.in_author_p = False
+        self.in_em = False
+        self.in_i = False
+        self.in_strong = False
+        self.in_b = False
+        self.in_ul = False
+        self.in_ol = False
+        self.in_li = False
+        self.in_dl = False
+        self.in_dt = False
+        self.in_dd = False
+        self.list_items = []
+        self.ol_counter = 0
         self.current_text = ""
         self.current_p_class = None
 
@@ -34,6 +50,14 @@ class ArticleParser(HTMLParser):
             self.in_h1 = True
         elif tag == 'h2':
             self.in_h2 = True
+        elif tag == 'h3':
+            self.in_h3 = True
+        elif tag == 'h4':
+            self.in_h4 = True
+        elif tag == 'h5':
+            self.in_h5 = True
+        elif tag == 'h6':
+            self.in_h6 = True
         elif tag == 'p':
             self.in_p = True
             self.current_p_class = attrs_dict.get('class', None)
@@ -42,13 +66,86 @@ class ArticleParser(HTMLParser):
         elif tag == 'article':
             self.in_article = True
         elif tag == 'footer':
+            # Before entering footer, save any pending content
+            if self.current_text.strip():
+                if self.in_p and not self.in_author_p:
+                    self.content_parts.append(self.current_text.strip())
+                elif self.in_dd:
+                    self.content_parts.append(self.current_text.strip())
+                elif self.in_dt:
+                    self.content_parts.append(f"**{self.current_text.strip()}**")
+                self.current_text = ""
             self.in_footer = True
+        elif tag == 'ul':
+            self.in_ul = True
+            self.list_items = []
+        elif tag == 'ol':
+            self.in_ol = True
+            self.ol_counter = 0
+            self.list_items = []
+        elif tag == 'li':
+            self.in_li = True
+            self.current_text = ""
+        elif tag == 'dl':
+            self.in_dl = True
+            self.list_items = []
+        elif tag == 'dt':
+            self.in_dt = True
+            self.current_text = ""
+        elif tag == 'dd':
+            self.in_dd = True
+            self.current_text = ""
+        elif tag in ('em', 'i'):
+            if (self.in_p or self.in_li or self.in_dt or self.in_dd or (self.in_h2 and self.title) or self.in_h3 or self.in_h4 or self.in_h5 or self.in_h6) and not self.in_author_p:
+                # Add space before asterisk if previous char isn't already whitespace
+                if self.current_text and not self.current_text[-1].isspace():
+                    self.current_text += ' '
+                self.current_text += '*'
+            self.in_em = True if tag == 'em' else False
+            self.in_i = True if tag == 'i' else False
+        elif tag in ('strong', 'b'):
+            # Don't add ** in dt tags since dt is already formatted as bold
+            if (self.in_p or self.in_li or self.in_dd or (self.in_h2 and self.title) or self.in_h3 or self.in_h4 or self.in_h5 or self.in_h6) and not self.in_author_p and not self.in_dt:
+                # Add space before double asterisk if previous char isn't already whitespace
+                if self.current_text and not self.current_text[-1].isspace():
+                    self.current_text += ' '
+                self.current_text += '**'
+            self.in_strong = True if tag == 'strong' else False
+            self.in_b = True if tag == 'b' else False
 
     def handle_endtag(self, tag):
         if tag == 'h1':
             self.in_h1 = False
         elif tag == 'h2':
             self.in_h2 = False
+            # If we already have a title, treat h2 as a content heading
+            if self.title and self.current_text.strip() and not self.in_footer:
+                self.content_parts.append(f"**{self.current_text.strip()}**")
+                self.current_text = ""
+        elif tag == 'h3':
+            self.in_h3 = False
+            # Add h3 content as a formatted heading
+            if self.current_text.strip() and not self.in_footer:
+                self.content_parts.append(f"**{self.current_text.strip()}**")
+            self.current_text = ""
+        elif tag == 'h4':
+            self.in_h4 = False
+            # Add h4 content as a formatted heading
+            if self.current_text.strip() and not self.in_footer:
+                self.content_parts.append(f"**{self.current_text.strip()}**")
+            self.current_text = ""
+        elif tag == 'h5':
+            self.in_h5 = False
+            # Add h5 content as a formatted heading
+            if self.current_text.strip() and not self.in_footer:
+                self.content_parts.append(f"**{self.current_text.strip()}**")
+            self.current_text = ""
+        elif tag == 'h6':
+            self.in_h6 = False
+            # Add h6 content as a formatted heading
+            if self.current_text.strip() and not self.in_footer:
+                self.content_parts.append(f"**{self.current_text.strip()}**")
+            self.current_text = ""
         elif tag == 'p':
             self.in_p = False
             # Only add to content if it's not an author paragraph and not in footer
@@ -61,12 +158,62 @@ class ArticleParser(HTMLParser):
             self.in_article = False
         elif tag == 'footer':
             self.in_footer = False
+        elif tag == 'li':
+            self.in_li = False
+            if self.current_text.strip() and not self.in_footer:
+                # Add the list item with appropriate prefix
+                if self.in_ol:
+                    self.ol_counter += 1
+                    self.list_items.append(f"{self.ol_counter}) {self.current_text.strip()}")
+                else:  # unordered list
+                    self.list_items.append(f"- {self.current_text.strip()}")
+            self.current_text = ""
+        elif tag == 'ul':
+            self.in_ul = False
+            if self.list_items:
+                # Add all list items as a single content part
+                self.content_parts.append("\n".join(self.list_items))
+            self.list_items = []
+        elif tag == 'ol':
+            self.in_ol = False
+            if self.list_items:
+                # Add all list items as a single content part
+                self.content_parts.append("\n".join(self.list_items))
+            self.list_items = []
+            self.ol_counter = 0
+        elif tag == 'dt':
+            self.in_dt = False
+            if self.current_text.strip() and not self.in_footer:
+                # Add dt as a bold heading
+                self.content_parts.append(f"**{self.current_text.strip()}**")
+            self.current_text = ""
+        elif tag == 'dd':
+            self.in_dd = False
+            if self.current_text.strip() and not self.in_footer:
+                # Add dd as regular content
+                self.content_parts.append(self.current_text.strip())
+            self.current_text = ""
+        elif tag == 'dl':
+            self.in_dl = False
+        elif tag in ('em', 'i'):
+            if (self.in_p or self.in_li or self.in_dt or self.in_dd or (self.in_h2 and self.title) or self.in_h3 or self.in_h4 or self.in_h5 or self.in_h6) and not self.in_author_p:
+                self.current_text += '*'
+                # Add space after asterisk if next operation will add non-whitespace
+                # (We'll handle this by checking in handle_data)
+            self.in_em = False
+            self.in_i = False
+        elif tag in ('strong', 'b'):
+            # Don't add ** in dt tags since dt is already formatted as bold
+            if (self.in_p or self.in_li or self.in_dd or (self.in_h2 and self.title) or self.in_h3 or self.in_h4 or self.in_h5 or self.in_h6) and not self.in_author_p and not self.in_dt:
+                self.current_text += '**'
+            self.in_strong = False
+            self.in_b = False
 
     def handle_data(self, data):
         text = data.strip()
         if not text:
-            # Still need to preserve spaces in paragraph content
-            if self.in_p and not self.in_author_p:
+            # Still need to preserve spaces in paragraph, list item, heading, and definition list content
+            if (self.in_p and not self.in_author_p) or self.in_li or self.in_dt or self.in_dd or (self.in_h2 and self.title) or self.in_h3 or self.in_h4 or self.in_h5 or self.in_h6:
                 self.current_text += data
             return
 
@@ -74,10 +221,13 @@ class ArticleParser(HTMLParser):
         if self.in_h1 and not self.title:
             self.title = text
 
-        # Capture subtitle/author (from h2)
+        # Capture subtitle/author (from h2) or treat as content heading if title already set
         elif self.in_h2:
             if not self.title:
                 self.title = text
+            elif not self.in_footer:
+                # If title is already set, capture h2 content as part of content
+                self.current_text += data
 
         # Capture author from <p class="author">
         elif self.in_author_p:
@@ -86,13 +236,52 @@ class ArticleParser(HTMLParser):
             else:
                 self.author = text
 
-        # Capture content (from p tags not in footer)
-        elif self.in_p and not self.in_footer:
+        # Capture content (from p tags, li tags, heading tags, or definition list tags not in footer)
+        elif (self.in_p or self.in_li or self.in_dt or self.in_dd or (self.in_h2 and self.title) or self.in_h3 or self.in_h4 or self.in_h5 or self.in_h6) and not self.in_footer:
+            # If we just closed an emphasis/strong tag and data doesn't start with space/punctuation,
+            # add a space before the new text
+            if self.current_text and self.current_text[-1] == '*' and data and not data[0].isspace() and data[0] not in '.,;:!?)]}':
+                self.current_text += ' '
             self.current_text += data
 
     def get_content(self):
         """Return the full content with paragraphs separated by double newlines."""
-        return "\n\n".join(self.content_parts)
+        # First, clean up single line breaks within each paragraph
+        cleaned_parts = []
+        for part in self.content_parts:
+            # Check if this is a list (contains lines starting with - or numbers)
+            lines = part.split('\n')
+            is_list = any(line.strip().startswith(('-', '1)', '2)', '3)', '4)', '5)', '6)', '7)', '8)', '9)')) for line in lines)
+
+            if is_list:
+                # For lists, preserve the line breaks between items but clean up within items
+                cleaned_lines = []
+                for line in lines:
+                    # Don't remove line breaks in lists, just clean up spaces
+                    cleaned_line = re.sub(r' +', ' ', line.strip())
+                    if cleaned_line:
+                        cleaned_lines.append(cleaned_line)
+                cleaned = '\n'.join(cleaned_lines)
+            else:
+                # For regular paragraphs, replace single newlines with spaces
+                cleaned = re.sub(r'(?<!\n)\n(?!\n)', ' ', part)
+                # Clean up multiple spaces
+                cleaned = re.sub(r' +', ' ', cleaned)
+                cleaned = cleaned.strip()
+
+            cleaned_parts.append(cleaned)
+
+        content = "\n\n".join(cleaned_parts)
+
+        # Clean up spacing INSIDE emphasis markers only
+        # Fix: "* word *" -> "*word*" (remove space after opening *)
+        content = re.sub(r'(\s)\*\s+', r'\1*', content)
+        # Fix: "* word *" -> "*word*" (remove space before closing *)
+        content = re.sub(r'\s+\*(\s|[.,;:!?)\]])', r'*\1', content)
+        # Same for strong tags (**)
+        content = re.sub(r'(\s)\*\*\s+', r'\1**', content)
+        content = re.sub(r'\s+\*\*(\s|[.,;:!?)\]])', r'**\1', content)
+        return content
 
 
 def fetch_article(filename: str) -> Dict[str, str]:
@@ -146,20 +335,119 @@ def extract_text_fallback(html: str) -> str:
     html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
     html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL | re.IGNORECASE)
 
-    # Extract paragraphs
+    # Extract paragraphs, headings, and lists
     paragraphs = re.findall(r'<p[^>]*>(.*?)</p>', html, flags=re.DOTALL)
+    h2_headings = re.findall(r'<h2[^>]*>(.*?)</h2>', html, flags=re.DOTALL | re.IGNORECASE)
+    h3_headings = re.findall(r'<h3[^>]*>(.*?)</h3>', html, flags=re.DOTALL | re.IGNORECASE)
+    h4_headings = re.findall(r'<h4[^>]*>(.*?)</h4>', html, flags=re.DOTALL | re.IGNORECASE)
+    h5_headings = re.findall(r'<h5[^>]*>(.*?)</h5>', html, flags=re.DOTALL | re.IGNORECASE)
+    h6_headings = re.findall(r'<h6[^>]*>(.*?)</h6>', html, flags=re.DOTALL | re.IGNORECASE)
+    ul_lists = re.findall(r'<ul[^>]*>(.*?)</ul>', html, flags=re.DOTALL | re.IGNORECASE)
+    ol_lists = re.findall(r'<ol[^>]*>(.*?)</ol>', html, flags=re.DOTALL | re.IGNORECASE)
 
-    # Clean up HTML tags and entities
-    text_parts = []
-    for p in paragraphs:
-        # Remove HTML tags
-        text = re.sub(r'<[^>]+>', '', p)
+    # Helper function to clean HTML content
+    def clean_html_content(content):
+        # Convert emphasis tags to markdown before removing other tags
+        text = re.sub(r'(\S)<em[^>]*>', r'\1 *', content, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</em>(\S)', r'* \1', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'(\s)<em[^>]*>', r'\1*', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</em>(\s)', r'*\1', text, flags=re.DOTALL | re.IGNORECASE)
+        # Handle i tags similarly
+        text = re.sub(r'(\S)<i[^>]*>', r'\1 *', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</i>(\S)', r'* \1', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'(\s)<i[^>]*>', r'\1*', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</i>(\s)', r'*\1', text, flags=re.DOTALL | re.IGNORECASE)
+        # Handle strong tags
+        text = re.sub(r'(\S)<strong[^>]*>', r'\1 **', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</strong>(\S)', r'** \1', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'(\s)<strong[^>]*>', r'\1**', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</strong>(\s)', r'**\1', text, flags=re.DOTALL | re.IGNORECASE)
+        # Handle b tags
+        text = re.sub(r'(\S)<b[^>]*>', r'\1 **', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</b>(\S)', r'** \1', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'(\s)<b[^>]*>', r'\1**', text, flags=re.DOTALL | re.IGNORECASE)
+        text = re.sub(r'</b>(\s)', r'**\1', text, flags=re.DOTALL | re.IGNORECASE)
+        # Remove remaining HTML tags
+        text = re.sub(r'<[^>]+>', '', text)
         # Decode HTML entities
         text = text.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&')
         text = text.replace('&quot;', '"').replace('&#39;', "'")
+        return text
+
+    # Clean up HTML tags and entities
+    text_parts = []
+
+    # Process paragraphs
+    for p in paragraphs:
+        text = clean_html_content(p)
+        # Clean up single line breaks within the paragraph (convert to spaces)
+        text = re.sub(r'(?<!\n)\n(?!\n)', ' ', text)
+        # Clean up multiple spaces
+        text = re.sub(r'\s+', ' ', text)
         text = text.strip()
         if text:
             text_parts.append(text)
+
+    # Process h2 headings (skip first one as it's likely the title)
+    for idx, h in enumerate(h2_headings):
+        if idx == 0:
+            continue  # Skip first h2 (title)
+        text = clean_html_content(h)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if text:
+            text_parts.append(f"**{text}**")
+
+    # Process h3 headings
+    for h in h3_headings:
+        text = clean_html_content(h)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if text:
+            text_parts.append(f"**{text}**")
+
+    # Process h4 headings
+    for h in h4_headings:
+        text = clean_html_content(h)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if text:
+            text_parts.append(f"**{text}**")
+
+    # Process h5 headings
+    for h in h5_headings:
+        text = clean_html_content(h)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if text:
+            text_parts.append(f"**{text}**")
+
+    # Process h6 headings
+    for h in h6_headings:
+        text = clean_html_content(h)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if text:
+            text_parts.append(f"**{text}**")
+
+    # Process unordered lists
+    for ul in ul_lists:
+        items = re.findall(r'<li[^>]*>(.*?)</li>', ul, flags=re.DOTALL | re.IGNORECASE)
+        list_items = []
+        for item in items:
+            item_text = clean_html_content(item)
+            item_text = re.sub(r'\s+', ' ', item_text).strip()
+            if item_text:
+                list_items.append(f"- {item_text}")
+        if list_items:
+            text_parts.append('\n'.join(list_items))
+
+    # Process ordered lists
+    for ol in ol_lists:
+        items = re.findall(r'<li[^>]*>(.*?)</li>', ol, flags=re.DOTALL | re.IGNORECASE)
+        list_items = []
+        for idx, item in enumerate(items, 1):
+            item_text = clean_html_content(item)
+            item_text = re.sub(r'\s+', ' ', item_text).strip()
+            if item_text:
+                list_items.append(f"{idx}) {item_text}")
+        if list_items:
+            text_parts.append('\n'.join(list_items))
 
     return "\n\n".join(text_parts)
 
@@ -285,7 +573,7 @@ def main():
     }
 
     # Write to file
-    output_path = "/Users/jamesmccullough/Documents/Github/daily-architect-wisdom/parsed_articles.json"
+    output_path = "/Users/jamesmccullough/Documents/Github/daily-architect-wisdom/src/data/articles.json"
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
